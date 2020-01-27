@@ -100,9 +100,7 @@ func (r *Redsocks) ForceExecute(command string) error {
 		return nil
 	}
 
-	err := exec.Command("sh", "-c", command).Run()
-
-	return err
+	return exec.Command("sh", "-c", command).Run()
 }
 
 func (r *Redsocks) Execute(command string) error {
