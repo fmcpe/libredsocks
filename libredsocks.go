@@ -62,22 +62,22 @@ func (r *Redsocks) GenerateConfig() error {
 // (c) 2020 Aztec Rabbit.
 
 base {
-    log_info = %s;
-    log_debug = %s;
-    log = "file:%s";
-    daemon = on;
-    redirector = iptables;
+	log_info = %s;
+	log_debug = %s;
+	log = "file:%s";
+	daemon = on;
+	redirector = iptables;
 }
 
 redsocks {
-    local_ip = %s;
-    local_port = %s;
+	local_ip = %s;
+	local_port = %s;
 
-    ip = %s;
-    port = %s;
-    type = %s;
-    login = "%s";
-    password = "%s";
+	ip = %s;
+	port = %s;
+	type = %s;
+	login = "%s";
+	password = "%s";
 }
 `,
 		r.Config.LogInfo,
@@ -147,11 +147,11 @@ func (r *Redsocks) Stop() {
 		"iptables -t nat -X",
 		"iptables -t nat -Z",
 		"killall redsocks",
-    }
+	}
 
-    for _, command := range commands {
-    	r.ForceExecute(command)
-    }
+	for _, command := range commands {
+		r.ForceExecute(command)
+	}
 }
 
 func (r *Redsocks) Start() {
@@ -166,7 +166,7 @@ func (r *Redsocks) Start() {
 
 	r.Stop()
 
-    commands := []string{
+	commands := []string{
 		"iptables -t nat -N REDSOCKS",
 		"iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN",
 		"iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN",
@@ -180,9 +180,9 @@ func (r *Redsocks) Start() {
 		"iptables -t nat -A REDSOCKS -p udp -j REDIRECT --to-ports 3070",
 		"iptables -t nat -A OUTPUT -j REDSOCKS",
 		"redsocks -c " + r.Config.ConfigOutput,
-    }
+	}
 
-    for _, command := range commands {
-    	r.Execute(command)
-    }
+	for _, command := range commands {
+		r.Execute(command)
+	}
 }
