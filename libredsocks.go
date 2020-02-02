@@ -152,19 +152,19 @@ func (r *Redsocks) Stop() {
 	for _, command := range commands {
 		r.ForceExecute(command)
 	}
+
+	os.RemoveAll(r.Config.LogOutput)
+	os.RemoveAll(r.Config.ConfigOutput)
 }
 
 func (r *Redsocks) Start() {
 	r.IsEnabled = r.CheckIsEnabled()
 
-	os.Remove(r.Config.LogOutput)
-	os.Remove(r.Config.ConfigOutput)
+	r.Stop()
 
 	if err := r.GenerateConfig(); err != nil {
 		return
 	}
-
-	r.Stop()
 
 	commands := []string{
 		"iptables -t nat -N REDSOCKS",
