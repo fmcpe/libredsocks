@@ -16,7 +16,7 @@ var (
 		LogOutput: libutils.RealPath("redsocks.log"),
 		LocalHost: "0.0.0.0",
 		LocalPort: "3070",
-		Host: "127.0.0.1",
+		Host: "0.0.0.0",
 		Port: "3080",
 		Type: "socks5",
 		Username: "",
@@ -178,6 +178,8 @@ func (r *Redsocks) Start() {
 		"iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN",
 		"iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 3070",
 		"iptables -t nat -A REDSOCKS -p udp -j REDIRECT --to-ports 3070",
+		"iptables -t nat -A PREROUTING -d 192.168.0.0/16 -j RETURN",
+		"iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 3070",
 		"iptables -t nat -A OUTPUT -j REDSOCKS",
 		"redsocks -c " + r.Config.ConfigOutput,
 	}
