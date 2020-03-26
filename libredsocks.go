@@ -16,7 +16,7 @@ var (
 		LogOutput: libutils.RealPath("redsocks.log"),
 		LocalHost: "0.0.0.0",
 		LocalPort: "3070",
-		Host: "0.0.0.0",
+		Host: "127.0.0.1",
 		Port: "3080",
 		Type: "socks5",
 		Username: "",
