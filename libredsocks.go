@@ -112,7 +112,7 @@ func (r *Redsocks) Execute(command string) error {
 }
 
 func (r *Redsocks) RuleDirectCheck(host string) bool {
-	err := r.Execute("iptables -t nat -C REDSOCKS -d " + host + " -j RETURN")
+	err := r.Execute("su -c iptables -t nat -C REDSOCKS -d " + host + " -j RETURN")
 
 	if fmt.Sprintf("%v", err) == "exit status 1" {
 		return false
@@ -133,19 +133,19 @@ func (r *Redsocks) RuleDirectAdd(host string) {
 		return
 	}
 
-	r.Execute("iptables -t nat -I REDSOCKS -d " + host + " -j RETURN")
+	r.Execute("su -c iptables -t nat -I REDSOCKS -d " + host + " -j RETURN")
 
 	libutils.Lock.Unlock()
 }
 
 func (r *Redsocks) Stop() {
 	commands := []string{
-		"iptables -F",
-		"iptables -X",
-		"iptables -Z",
-		"iptables -t nat -F",
-		"iptables -t nat -X",
-		"iptables -t nat -Z",
+		"su -c iptables -F",
+		"su -c iptables -X",
+		"su -c iptables -Z",
+		"su -c iptables -t nat -F",
+		"su -c iptables -t nat -X",
+		"su -c iptables -t nat -Z",
 		"killall redsocks",
 	}
 
@@ -167,20 +167,20 @@ func (r *Redsocks) Start() {
 	}
 
 	commands := []string{
-		"iptables -t nat -N REDSOCKS",
-		"iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN",
-		"iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN",
-		"iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 3070",
-		"iptables -t nat -A REDSOCKS -p udp -j REDIRECT --to-ports 3070",
-		"iptables -t nat -A PREROUTING -d 192.168.0.0/16 -j RETURN",
-		"iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 3070",
-		"iptables -t nat -A OUTPUT -j REDSOCKS",
+		"su -c iptables -t nat -N REDSOCKS",
+		"su -c iptables -t nat -A REDSOCKS -d 0.0.0.0/8 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 10.0.0.0/8 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 127.0.0.0/8 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 169.254.0.0/16 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 172.16.0.0/12 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 192.168.0.0/16 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 224.0.0.0/4 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -d 240.0.0.0/4 -j RETURN",
+		"su -c iptables -t nat -A REDSOCKS -p tcp -j REDIRECT --to-ports 3070",
+		"su -c iptables -t nat -A REDSOCKS -p udp -j REDIRECT --to-ports 3070",
+		"su -c iptables -t nat -A PREROUTING -d 192.168.0.0/16 -j RETURN",
+		"su -c iptables -t nat -A PREROUTING -p tcp -j REDIRECT --to-ports 3070",
+		"su -c iptables -t nat -A OUTPUT -j REDSOCKS",
 		"redsocks -c " + r.Config.ConfigOutput,
 	}
 
